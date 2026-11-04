@@ -4,8 +4,9 @@ import { ErroDeDominio } from '../../dominio/compartilhado/ErroDeDominio'
 import { HoraDoDia } from '../../dominio/compartilhado/HoraDoDia'
 import type { Pedido } from '../../dominio/pedido/Pedido'
 import { useApp } from '../contexto'
-import { IconeAlerta, IconeCheck, IconeLocal, IconePlay, IconeVoltar } from '../componentes/Icones'
-import { IlustracaoDoItem } from '../componentes/IlustracaoDoItem'
+import { IconeAlerta, IconeCheck, IconePlay, IconeVoltar } from '../componentes/Icones'
+import { SeletorDeLocal } from '../componentes/SeletorDeLocal'
+import { ImagemDoItem } from '../componentes/ImagemDoItem'
 import { minutosPorExtenso } from '../formatar'
 
 interface Props {
@@ -43,7 +44,7 @@ export function TelaDoPedido({ pedido, aoVoltar }: Props) {
         <div className="ticket__picote" />
         <div className="ticket__linha">
           <span className="ticket__foto">
-            <IlustracaoDoItem imagem={pedido.imagemDoItem()} />
+            <ImagemDoItem chave={pedido.imagemDoItem()} />
           </span>
           <span className="ticket__item">
             <strong>{pedido.descricaoCurta()}</strong>
@@ -108,22 +109,18 @@ function EstouIndo({ pedido }: { pedido: Pedido }) {
   return (
     <section className="estado estado--ativo">
       <p className="estado__titulo">É hora! Onde você está?</p>
-      <div className="locais">
-        {aluno.locais.map((l) => (
-          <button
-            key={l.id}
-            className={`chip chip--local ${local?.id === l.id ? 'chip--ativo' : ''}`}
-            onClick={() => setLocal(l)}
-          >
-            <IconeLocal width={16} height={16} /> {l.nome}
-          </button>
-        ))}
-      </div>
+      <SeletorDeLocal local={local} aoEscolher={setLocal} />
       <button className="botao-play" onClick={play} disabled={!local} aria-label="Estou indo buscar">
         <IconePlay width={42} height={42} />
       </button>
       <p className="estado__texto estado__texto--centro">
-        {local ? <>Aperte o play: <b>“estou indo buscar”</b></> : 'Escolha seu local para liberar o play'}
+        {local ? (
+          <>
+            Saindo de <b>{local.descricao()}</b>. Aperte o play: <b>“estou indo buscar”</b>
+          </>
+        ) : (
+          'Escolha seu local para liberar o play'
+        )}
       </p>
       {erro && <p className="aviso" role="alert">{erro}</p>}
     </section>

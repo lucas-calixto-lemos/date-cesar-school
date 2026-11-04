@@ -7,7 +7,7 @@ export type MomentoDaJanela = 'antes' | 'durante' | 'depois'
 
 /**
  * Janela em que o aluno acha que vai ser o intervalo dele.
- * Regras: início entre 20:00 e 22:00 em passos de 5 min;
+ * Regras: início entre 20:00 e 21:15 (último horário de retirada) em passos de 5 min;
  * duração de 15 min (o intervalo) até 30 min (intervalo + 15 de margem).
  */
 // PRINCÍPIO: Ocultamento de Informação — a janela se valida sozinha no construtor.
@@ -15,7 +15,7 @@ export type MomentoDaJanela = 'antes' | 'durante' | 'depois'
 // e a UI não precisa (nem deve) repetir essas regras: ela pergunta as opções aqui.
 export class JanelaDeRetirada {
   private static readonly INICIO_MAIS_CEDO = HoraDoDia.de(20, 0)
-  private static readonly INICIO_MAIS_TARDE = HoraDoDia.de(22, 0)
+  private static readonly INICIO_MAIS_TARDE = HoraDoDia.de(21, 15)
   private static readonly PASSO_EM_MINUTOS = 5
   private static readonly DURACAO_MINIMA = 15
   private static readonly DURACAO_MAXIMA = 30

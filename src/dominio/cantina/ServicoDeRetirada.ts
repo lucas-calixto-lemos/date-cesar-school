@@ -23,7 +23,7 @@ export class ServicoDeRetirada {
     this.notificador.avisarAlunoACaminho({
       comanda: pedido.comanda(),
       descricaoDoPedido: pedido.descricaoCurta(),
-      localDoAluno: local.nome,
+      localDoAluno: local.descricao(),
       horario: agora,
       jaPago: pedido.estaPago(),
     })

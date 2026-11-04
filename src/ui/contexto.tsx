@@ -1,6 +1,7 @@
 import { createContext, useContext } from 'react'
 import type { ServicosDoAluno } from '../app/composicao'
 import type { ControleDeRelogio } from '../dominio/tempo/Relogio'
+import type { Tema } from './tema'
 
 export interface ContextoDoApp {
   // PRINCÍPIO: Segregação de Interfaces — as telas do aluno recebem só
@@ -11,6 +12,8 @@ export interface ContextoDoApp {
   agora: Date
   /** Força a releitura do relógio (após ajuste no debug). */
   atualizar(): void
+  tema: Tema
+  alternarTema(): void
 }
 
 export const Contexto = createContext<ContextoDoApp | null>(null)

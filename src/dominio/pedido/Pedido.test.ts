@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { umItem } from '../__testes__/fabricas'
-import { LocalDoCampus } from '../campus/LocalDoCampus'
+import { umItem, umLocal } from '../__testes__/fabricas'
 import { Comanda } from '../comanda/Comanda'
 import { GeradorSequencialDeComanda } from '../comanda/GeradorDeComanda'
 import { Dinheiro } from '../compartilhado/Dinheiro'
@@ -10,7 +9,7 @@ import { JanelaDeRetirada } from '../reserva/JanelaDeRetirada'
 import { Pedido, TransicaoDePedidoInvalidaError } from './Pedido'
 
 const h = HoraDoDia.de
-const local = LocalDoCampus.porId('bloco-a')
+const local = umLocal('Sala 110', 1, 'Brum · Bloco A')
 
 function umPedido(cobranca = Cobranca.pendente(Dinheiro.reais(8), 'Pague no balcão')) {
   return new Pedido(Comanda.de(19), umItem(), 1, JanelaDeRetirada.criar(h(20, 15), 20), cobranca)
@@ -29,7 +28,7 @@ describe('Pedido', () => {
     expect(pedido.podeAvisarQueEstaIndo(h(20, 20))).toBe(true)
     pedido.avisarQueEstaIndo(local, h(20, 20))
     expect(pedido.situacaoAtual()).toBe('aluno-a-caminho')
-    expect(pedido.localDoAluno()).toBe('Bloco A')
+    expect(pedido.localDoAluno()).toBe('Brum · Bloco A · Sala 110')
   })
 
   it('não deixa avisar duas vezes', () => {

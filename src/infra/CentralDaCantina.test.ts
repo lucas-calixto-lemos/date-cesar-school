@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { umItem } from '../dominio/__testes__/fabricas'
-import { LocalDoCampus } from '../dominio/campus/LocalDoCampus'
+import { umItem, umLocal } from '../dominio/__testes__/fabricas'
 import type { NotificadorCantina, PainelDaCantina } from '../dominio/cantina/interfaces'
 import { ServicoDeRetirada } from '../dominio/cantina/ServicoDeRetirada'
 import { Comanda } from '../dominio/comanda/Comanda'
@@ -33,9 +32,9 @@ describe('Central da cantina (aluno avisa → cantina vê → pedido fica pronto
     )
     pedidos.salvar(pedido)
 
-    new ServicoDeRetirada(notificador, RelogioFixo.as(20, 5)).estouIndoBuscar(pedido, LocalDoCampus.porId('bloco-b'))
+    new ServicoDeRetirada(notificador, RelogioFixo.as(20, 5)).estouIndoBuscar(pedido, umLocal('Sala 201', 3, 'Brum · Bloco B'))
     expect(painel.avisosPendentes()).toHaveLength(1)
-    expect(painel.avisosPendentes()[0].localDoAluno).toBe('Bloco B')
+    expect(painel.avisosPendentes()[0].localDoAluno).toBe('Brum · Bloco B · Sala 201')
 
     agendadas.forEach((acao) => acao()) // "passa" o tempo da cozinha
     expect(pedido.situacaoAtual()).toBe('pronto')

@@ -1,4 +1,4 @@
-import { LocalDoCampus } from '../dominio/campus/LocalDoCampus'
+import type { MapaDoCampus } from '../dominio/campus/MapaDoCampus'
 import type { NotificadorCantina, PainelDaCantina } from '../dominio/cantina/interfaces'
 import { ServicoDeRetirada } from '../dominio/cantina/ServicoDeRetirada'
 import { ConsultaDeCardapio } from '../dominio/cardapio/ConsultaDeCardapio'
@@ -25,6 +25,7 @@ import { CardapioEmMemoria } from '../infra/CardapioEmMemoria'
 import { CentralDaCantinaEmMemoria } from '../infra/CentralDaCantinaEmMemoria'
 import { CozinhaSimulada } from '../infra/CozinhaSimulada'
 import { criarItensIniciais } from '../infra/dadosDoCardapio'
+import { MapaDoCampusEmMemoria } from '../infra/dadosDoCampus'
 import { FilaSimulada } from '../infra/FilaSimulada'
 import { RepositorioDePedidosEmMemoria } from '../infra/RepositorioDePedidosEmMemoria'
 import { criarRegistroDeFormasDePagamento } from './formasDePagamento'
@@ -38,7 +39,7 @@ export interface ServicosDoAluno {
   reserva: ServicoDeReserva
   retirada: ServicoDeRetirada
   estimativa: ServicoDeEstimativa
-  locais: LocalDoCampus[]
+  campus: MapaDoCampus
 }
 
 // ...e o que a tela da CANTINA (tia) vai usar. Nenhum lado enxerga o do outro.
@@ -89,7 +90,7 @@ export function montarAplicacao(relogioBase: Relogio = new RelogioDoSistema()): 
       reserva: new ServicoDeReserva(cardapio, horarioLimite, new GeradorSequencialDeComanda(18), pedidos),
       retirada: new ServicoDeRetirada(notificador, relogio),
       estimativa: new ServicoDeEstimativa(estimador, new ClassificadorDeChance()),
-      locais: LocalDoCampus.todos(),
+      campus: new MapaDoCampusEmMemoria(),
     },
     cantina: { relogio, painel },
     controleDeRelogio: relogio,

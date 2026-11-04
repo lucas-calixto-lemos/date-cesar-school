@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { ErroDeDominio } from '../../dominio/compartilhado/ErroDeDominio'
-import type { HoraDoDia } from '../../dominio/compartilhado/HoraDoDia'
 import type { Pedido } from '../../dominio/pedido/Pedido'
 import { JanelaDeRetirada } from '../../dominio/reserva/JanelaDeRetirada'
 import { useApp } from '../contexto'
 import { IconeAlerta, IconeCarteira, IconeCheck, IconeCopiar, IconeVoltar } from '../componentes/Icones'
-import { IlustracaoDoItem } from '../componentes/IlustracaoDoItem'
+import { ImagemDoItem } from '../componentes/ImagemDoItem'
 import { QrFalso } from '../componentes/QrFalso'
+import { RodaDeSelecao } from '../componentes/RodaDeSelecao'
 
 interface Props {
   itemId: string
@@ -18,23 +18,20 @@ interface Props {
 // As opções vêm do próprio objeto de valor: a UI não conhece as regras da janela.
 const INICIOS = JanelaDeRetirada.iniciosPossiveis()
 const DURACOES = JanelaDeRetirada.duracoesPossiveis()
-const INICIOS_POR_HORA = INICIOS.reduce<Map<number, HoraDoDia[]>>((grupos, hora) => {
-  grupos.set(hora.horas(), [...(grupos.get(hora.horas()) ?? []), hora])
-  return grupos
-}, new Map())
 
 export function Reservar({ itemId, quantidade, aoVoltar, aoConcluir }: Props) {
   const { aluno } = useApp()
   const item = aluno.cardapio.buscar(itemId)
   const formas = aluno.formasDePagamento.listar()
 
-  const [inicio, setInicio] = useState<HoraDoDia | null>(null)
+  const [indiceDoInicio, setIndiceDoInicio] = useState(0)
+  const inicio = INICIOS[indiceDoInicio]
   const [duracao, setDuracao] = useState(DURACOES[0])
   const [formaId, setFormaId] = useState<string | null>(null)
   const [erro, setErro] = useState<string | null>(null)
   const [pedidoComQr, setPedidoComQr] = useState<Pedido | null>(null)
 
-  const janela = inicio ? JanelaDeRetirada.criar(inicio, duracao) : null
+  const janela = JanelaDeRetirada.criar(inicio, duracao)
   const reservasAbertas = aluno.horarioLimite.estaAberta()
   const podeConfirmar = Boolean(janela && formaId && reservasAbertas)
 
@@ -69,7 +66,7 @@ export function Reservar({ itemId, quantidade, aoVoltar, aoConcluir }: Props) {
 
       <div className={`resumo-item cat-${item.categoria()}`}>
         <span className="resumo-item__foto">
-          <IlustracaoDoItem imagem={item.imagem()} />
+          <ImagemDoItem chave={item.imagem()} />
         </span>
         <span className="resumo-item__texto">
           <strong>{item.nome()}</strong>
@@ -82,23 +79,30 @@ export function Reservar({ itemId, quantidade, aoVoltar, aoConcluir }: Props) {
         <h2 className="passo__titulo">
           <span className="passo__numero">1</span> Quando deve ser seu intervalo?
         </h2>
-        <p className="passo__ajuda">Escolha o início provável. A cantina separa seu pedido para essa janela.</p>
-        {[...INICIOS_POR_HORA.entries()].map(([hora, horarios]) => (
-          <div key={hora} className="horarios">
-            <span className="horarios__hora">{hora}h</span>
-            <div className="horarios__lista">
-              {horarios.map((h) => (
-                <button
-                  key={h.toString()}
-                  className={`chip chip--horario ${inicio?.igualA(h) ? 'chip--ativo' : ''}`}
-                  onClick={() => setInicio(h)}
-                >
-                  {h.toString()}
-                </button>
-              ))}
-            </div>
+        <p className="passo__ajuda">
+          Gire para escolher o início provável. Retiradas de {INICIOS[0].toString()} até{' '}
+          {INICIOS[INICIOS.length - 1].toString()}.
+        </p>
+        <div className="seletor-horario">
+          <div className="seletor-horario__rotulos" aria-hidden="true">
+            <span>hora</span>
+            <span>min</span>
           </div>
-        ))}
+          <RodaDeSelecao
+            opcoes={INICIOS}
+            indice={indiceDoInicio}
+            aoMudar={setIndiceDoInicio}
+            rotuloAcessivel="Horário de início do intervalo"
+            textoAcessivel={(h) => h.toString()}
+            renderizar={(h) => (
+              <span className="horario-roda">
+                <span>{String(h.horas()).padStart(2, '0')}</span>
+                <span className="horario-roda__sep">:</span>
+                <span>{String(h.minutos()).padStart(2, '0')}</span>
+              </span>
+            )}
+          />
+        </div>
 
         <h3 className="passo__subtitulo">Duração da janela</h3>
         <div className="segmentado" role="radiogroup" aria-label="Duração da janela">

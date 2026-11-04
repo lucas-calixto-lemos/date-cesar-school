@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { umItem } from '../__testes__/fabricas'
-import { LocalDoCampus } from '../campus/LocalDoCampus'
+import { umItem, umLocal } from '../__testes__/fabricas'
 import { Comanda } from '../comanda/Comanda'
 import { Dinheiro } from '../compartilhado/Dinheiro'
 import { HoraDoDia } from '../compartilhado/HoraDoDia'
@@ -34,13 +33,13 @@ describe('ServicoDeRetirada ("estou indo buscar")', () => {
     const pedido = novoPedido()
 
     expect(servico.podeAvisar(pedido)).toBe(true)
-    servico.estouIndoBuscar(pedido, LocalDoCampus.porId('biblioteca'))
+    servico.estouIndoBuscar(pedido, umLocal('Biblioteca', 1, 'Brum · Bloco A'))
 
     expect(pedido.situacaoAtual()).toBe('aluno-a-caminho')
     expect(notificador.avisos).toHaveLength(1)
     expect(notificador.avisos[0]).toMatchObject({
       descricaoDoPedido: '2× Pastel',
-      localDoAluno: 'Biblioteca',
+      localDoAluno: 'Brum · Bloco A · Biblioteca',
       jaPago: true,
     })
   })
@@ -50,7 +49,7 @@ describe('ServicoDeRetirada ("estou indo buscar")', () => {
     const servico = new ServicoDeRetirada(notificador, RelogioFixo.as(20, 0))
     const pedido = novoPedido()
     expect(servico.podeAvisar(pedido)).toBe(false)
-    expect(() => servico.estouIndoBuscar(pedido, LocalDoCampus.porId('bloco-a'))).toThrow()
+    expect(() => servico.estouIndoBuscar(pedido, umLocal('Sala 001', 1, 'Brum · Bloco A'))).toThrow()
     expect(notificador.avisos).toHaveLength(0)
   })
 })

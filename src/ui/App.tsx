@@ -3,6 +3,7 @@ import type { Aplicacao } from '../app/composicao'
 import type { Pedido } from '../dominio/pedido/Pedido'
 import { PainelDeDebug } from './componentes/PainelDeDebug'
 import { Contexto, type ContextoDoApp } from './contexto'
+import { aplicarTema, salvarTema, temaInicial, type Tema } from './tema'
 import { DetalheDoItem } from './telas/DetalheDoItem'
 import { Estimar } from './telas/Estimar'
 import { Home } from './telas/Home'
@@ -25,6 +26,16 @@ export function App({ app }: { app: Aplicacao }) {
 
   const atualizar = useCallback(() => setAgora(app.aluno.relogio.agora()), [app])
 
+  const [tema, setTema] = useState<Tema>(temaInicial)
+  const alternarTema = useCallback(() => {
+    setTema((atual) => {
+      const novo: Tema = atual === 'escuro' ? 'claro' : 'escuro'
+      aplicarTema(novo)
+      salvarTema(novo)
+      return novo
+    })
+  }, [])
+
   useEffect(() => {
     const id = setInterval(atualizar, 1000)
     return () => clearInterval(id)
@@ -40,8 +51,8 @@ export function App({ app }: { app: Aplicacao }) {
   const terminarSplash = useCallback(() => setMostrarSplash(false), [])
 
   const contexto = useMemo<ContextoDoApp>(
-    () => ({ aluno: app.aluno, controleDeRelogio: app.controleDeRelogio, agora, atualizar }),
-    [app, agora, atualizar],
+    () => ({ aluno: app.aluno, controleDeRelogio: app.controleDeRelogio, agora, atualizar, tema, alternarTema }),
+    [app, agora, atualizar, tema, alternarTema],
   )
 
   function concluirReserva(pedido: Pedido) {

@@ -3,8 +3,9 @@ import type { LocalDoCampus } from '../../dominio/campus/LocalDoCampus'
 import { NivelDeChance } from '../../dominio/estimativa/ClassificadorDeChance'
 import { ServicoDeEstimativa } from '../../dominio/estimativa/ServicoDeEstimativa'
 import { useApp } from '../contexto'
-import { IconeLocal, IconeVoltar } from '../componentes/Icones'
-import { IlustracaoDoItem } from '../componentes/IlustracaoDoItem'
+import { IconeVoltar } from '../componentes/Icones'
+import { SeletorDeLocal } from '../componentes/SeletorDeLocal'
+import { ImagemDoItem } from '../componentes/ImagemDoItem'
 
 interface Props {
   itemId: string
@@ -36,7 +37,7 @@ export function Estimar({ itemId, aoVoltar }: Props) {
 
       <div className={`resumo-item cat-${item.categoria()}`}>
         <span className="resumo-item__foto">
-          <IlustracaoDoItem imagem={item.imagem()} />
+          <ImagemDoItem chave={item.imagem()} />
         </span>
         <span className="resumo-item__texto">
           <strong>{item.nome()}</strong>
@@ -48,17 +49,7 @@ export function Estimar({ itemId, aoVoltar }: Props) {
         <h2 className="passo__titulo">
           <span className="passo__numero">1</span> Onde você está?
         </h2>
-        <div className="locais">
-          {aluno.locais.map((l) => (
-            <button
-              key={l.id}
-              className={`chip chip--local ${local?.id === l.id ? 'chip--ativo' : ''}`}
-              onClick={() => setLocal(l)}
-            >
-              <IconeLocal width={16} height={16} /> {l.nome}
-            </button>
-          ))}
-        </div>
+        <SeletorDeLocal local={local} aoEscolher={setLocal} />
       </section>
 
       <section className="passo">

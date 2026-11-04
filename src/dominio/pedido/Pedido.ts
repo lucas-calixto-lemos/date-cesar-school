@@ -97,7 +97,7 @@ export class Pedido {
     return this.situacao !== 'retirado'
   }
   localDoAluno(): string | undefined {
-    return this.localInformado?.nome
+    return this.localInformado?.descricao()
   }
 
   podeAvisarQueEstaIndo(agora: HoraDoDia): boolean {

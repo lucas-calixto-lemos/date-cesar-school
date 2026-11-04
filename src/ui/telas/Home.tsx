@@ -2,8 +2,8 @@ import { useRef, useState } from 'react'
 import { CATEGORIAS, type Categoria, type ItemDoCardapio } from '../../dominio/cardapio/ItemDoCardapio'
 import type { Pedido } from '../../dominio/pedido/Pedido'
 import { useApp } from '../contexto'
-import { IconeBusca, IconeRelogio, IconeSeta } from '../componentes/Icones'
-import { IlustracaoDoItem } from '../componentes/IlustracaoDoItem'
+import { IconeBusca, IconeLua, IconeRelogio, IconeSeta, IconeSol } from '../componentes/Icones'
+import { ImagemDoItem } from '../componentes/ImagemDoItem'
 import { Marca, mascoteCreme } from '../componentes/Marca'
 import { cronometro, horaCurta } from '../formatar'
 
@@ -14,7 +14,7 @@ interface Props {
 }
 
 export function Home({ pedidoAtual, aoAbrirItem, aoAbrirPedido }: Props) {
-  const { aluno, agora } = useApp()
+  const { aluno, agora, tema, alternarTema } = useApp()
   const [termo, setTermo] = useState('')
   const [categoria, setCategoria] = useState<Categoria | undefined>()
   const [destacarBusca, setDestacarBusca] = useState(false)
@@ -35,24 +35,36 @@ export function Home({ pedidoAtual, aoAbrirItem, aoAbrirPedido }: Props) {
     <div className="tela tela--home">
       <header className="topo">
         <Marca />
-        <span className="relogio-pill" title="Horário atual">
-          <IconeRelogio width={16} height={16} />
-          {horaCurta(agora)}
-        </span>
+        <div className="topo__direita">
+          <span className="relogio-pill" title="Horário atual">
+            <IconeRelogio width={16} height={16} />
+            {horaCurta(agora)}
+          </span>
+          <button
+            className="botao-tema"
+            onClick={alternarTema}
+            aria-label={tema === 'escuro' ? 'Ativar modo claro' : 'Ativar modo escuro'}
+            title={tema === 'escuro' ? 'Modo claro' : 'Modo escuro'}
+          >
+            {tema === 'escuro' ? <IconeSol width={18} height={18} /> : <IconeLua width={18} height={18} />}
+          </button>
+        </div>
       </header>
 
       <section className={`hero ${reservasAbertas ? '' : 'hero--fechado'}`}>
-        <img src={mascoteCreme} alt="" className="hero__mascote" />
-        <p className="hero__chamada">Intervalo de 15 min?</p>
-        <h1 className="hero__titulo">
-          Seu lanche
-          <br />
-          te esperando.
-        </h1>
-        <div className="hero__acoes">
+        <div className="hero__principal">
+          <p className="hero__chamada">Intervalo de 15 min?</p>
+          <h1 className="hero__titulo">
+            Seu lanche
+            <br />
+            te esperando.
+          </h1>
           <button className="botao-reservar" onClick={aoTocarReservar} disabled={!reservasAbertas}>
             Reservar
           </button>
+        </div>
+        <div className="hero__lado">
+          <img src={mascoteCreme} alt="" className="hero__mascote" />
           <div className="cronometro" aria-live="off">
             <span className="cronometro__rotulo">{reservasAbertas ? `fecha às ${limite}` : 'reservas'}</span>
             <strong className="cronometro__valor">
@@ -129,7 +141,7 @@ function CartaoDoItem({ item, aoTocar }: { item: ItemDoCardapio; aoTocar(): void
   return (
     <button className={`cartao cat-${item.categoria()} ${esgotado ? 'cartao--esgotado' : ''}`} onClick={aoTocar}>
       <span className="cartao__foto">
-        <IlustracaoDoItem imagem={item.imagem()} className="cartao__ilustracao" />
+        <ImagemDoItem chave={item.imagem()} className="cartao__ilustracao" />
         {esgotado && <span className="selo-esgotado">Esgotado</span>}
       </span>
       <span className="cartao__nome">{item.nome()}</span>

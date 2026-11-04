@@ -153,14 +153,14 @@ const ILUSTRACOES: Record<string, () => JSX.Element> = {
       <g stroke="#9A6340" strokeWidth="2.5" strokeLinecap="round" fill="none"><path d="M40 52l10 4 6-5" /><path d="M62 46l8 6 10-2" /><path d="M50 62l10-2 8 4" /></g>
     </>
   ),
-  'lata-energetico-slim': () => <Lata corpo="#2C4D9C" faixa="#D3D9E4" detalhe="#2C4D9C" largura={34} altura={78} />,
-  'lata-energetico-grande': () => <Lata corpo="#1F2429" faixa="#8BD13D" detalhe="#1F2429" largura={42} altura={86} />,
-  'lata-refri-vermelha': () => <Lata corpo="#D8261E" faixa="#D8261E" detalhe="#FFFFFF" />,
-  'lata-refri-verde': () => <Lata corpo="#23863A" faixa="#FFFFFF" detalhe="#F2C230" />,
-  'garrafa-agua': () => <Garrafa liquido="#CFE8F6" tampa="#2F7FD0" rotulo="#FFFFFF" />,
-  'garrafa-agua-gas': () => <Garrafa liquido="#CFE8F6" tampa="#2E9E5B" rotulo="#E3F4EA" bolhas />,
-  'garrafa-isotonico': () => <Garrafa liquido="#FF8A1F" tampa="#2A1610" rotulo="#FFFFFF" />,
-  'caixinha-suco': () => (
+  'red-bull': () => <Lata corpo="#2C4D9C" faixa="#D3D9E4" detalhe="#2C4D9C" largura={34} altura={78} />,
+  'monster': () => <Lata corpo="#1F2429" faixa="#8BD13D" detalhe="#1F2429" largura={42} altura={86} />,
+  'coca-cola': () => <Lata corpo="#D8261E" faixa="#D8261E" detalhe="#FFFFFF" />,
+  'guarana': () => <Lata corpo="#23863A" faixa="#FFFFFF" detalhe="#F2C230" />,
+  'agua': () => <Garrafa liquido="#CFE8F6" tampa="#2F7FD0" rotulo="#FFFFFF" />,
+  'agua-com-gas': () => <Garrafa liquido="#CFE8F6" tampa="#2E9E5B" rotulo="#E3F4EA" bolhas />,
+  'gatorade': () => <Garrafa liquido="#FF8A1F" tampa="#2A1610" rotulo="#FFFFFF" />,
+  'suco-caixinha': () => (
     <>
       <Sombra />
       <path d="M72 36l14-8v62l-14 10z" fill="#5E2A82" />

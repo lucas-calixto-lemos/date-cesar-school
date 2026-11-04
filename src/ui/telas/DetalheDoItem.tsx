@@ -3,7 +3,7 @@ import { CATEGORIAS } from '../../dominio/cardapio/ItemDoCardapio'
 import { Pedido } from '../../dominio/pedido/Pedido'
 import { useApp } from '../contexto'
 import { IconeMais, IconeMenos, IconeRelogio, IconeVoltar } from '../componentes/Icones'
-import { IlustracaoDoItem } from '../componentes/IlustracaoDoItem'
+import { ImagemDoItem, temFoto } from '../componentes/ImagemDoItem'
 
 interface Props {
   itemId: string
@@ -24,13 +24,17 @@ export function DetalheDoItem({ itemId, aoVoltar, aoReservar, aoEstimar }: Props
 
   return (
     <div className={`tela tela--detalhe cat-${item.categoria()} ${esgotado ? 'tela--esgotado' : ''}`}>
-      <div className="detalhe__palco">
+      <div className={`detalhe__palco ${temFoto(item.imagem()) ? 'detalhe__palco--foto' : ''}`}>
+        {temFoto(item.imagem()) ? (
+          <ImagemDoItem chave={item.imagem()} className="detalhe__foto" />
+        ) : (
+          <div className="detalhe__prato">
+            <ImagemDoItem chave={item.imagem()} className="detalhe__ilustracao" />
+          </div>
+        )}
         <button className="botao-redondo detalhe__voltar" onClick={aoVoltar} aria-label="Voltar">
           <IconeVoltar />
         </button>
-        <div className="detalhe__prato">
-          <IlustracaoDoItem imagem={item.imagem()} className="detalhe__ilustracao" />
-        </div>
         {esgotado && <span className="selo-esgotado selo-esgotado--grande">Esgotado</span>}
       </div>
 

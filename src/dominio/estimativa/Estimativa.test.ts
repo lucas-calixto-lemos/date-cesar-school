@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { FilaFalsa, umItem } from '../__testes__/fabricas'
-import { LocalDoCampus } from '../campus/LocalDoCampus'
+import { FilaFalsa, umItem, umLocal } from '../__testes__/fabricas'
 import { ClassificadorDeChance, NivelDeChance } from './ClassificadorDeChance'
 import { TempoDaFila, TempoDeDeslocamento, TempoDePreparo, TempoDosPedidosReservados } from './componentes'
 import type { ComponenteDeTempo } from './EstimadorDeTempo'
@@ -8,7 +7,7 @@ import { EstimadorPorComposicao } from './EstimadorPorComposicao'
 import { ServicoDeEstimativa } from './ServicoDeEstimativa'
 
 const item = umItem({ minutosDePreparo: 4 })
-const biblioteca = LocalDoCampus.porId('biblioteca') // 4 min até a cantina → 8 ida e volta
+const biblioteca = umLocal('Biblioteca', 4) // 4 min até a cantina → 8 ida e volta
 
 describe('EstimadorPorComposicao', () => {
   it('soma as parcelas de cada componente', () => {

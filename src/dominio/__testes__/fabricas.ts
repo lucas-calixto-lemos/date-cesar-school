@@ -1,4 +1,5 @@
 // Objetos de apoio para os testes do domínio (sem depender da infra).
+import { LocalDoCampus } from '../campus/LocalDoCampus'
 import type { CardapioRepository } from '../cardapio/CardapioRepository'
 import { ItemDoCardapio, type DadosDoItem } from '../cardapio/ItemDoCardapio'
 import type { FilaDaCantina } from '../cantina/interfaces'
@@ -6,6 +7,10 @@ import type { Comanda } from '../comanda/Comanda'
 import { Dinheiro } from '../compartilhado/Dinheiro'
 import type { Pedido } from '../pedido/Pedido'
 import type { RepositorioDePedidos } from '../pedido/RepositorioDePedidos'
+
+export function umLocal(nome: string, minutosAteACantina: number, contexto?: string): LocalDoCampus {
+  return LocalDoCampus.criar({ id: nome.toLowerCase(), nome, minutosAteACantina, contexto })
+}
 
 export function umItem(dados: Partial<DadosDoItem> = {}): ItemDoCardapio {
   return new ItemDoCardapio({

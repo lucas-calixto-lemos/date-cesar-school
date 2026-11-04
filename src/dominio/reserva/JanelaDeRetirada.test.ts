@@ -10,13 +10,13 @@ describe('JanelaDeRetirada (objeto de valor que se valida sozinho)', () => {
     expect(janela.descricao()).toBe('20:00 – 20:15')
   })
 
-  it('aceita o início mais tarde (22:00) com a duração máxima (30)', () => {
-    expect(JanelaDeRetirada.criar(h(22, 0), 30).fim().toString()).toBe('22:30')
+  it('aceita o último início (21:15) com a duração máxima (30)', () => {
+    expect(JanelaDeRetirada.criar(h(21, 15), 30).fim().toString()).toBe('21:45')
   })
 
   it.each([
     ['antes das 20:00', h(19, 55), 15],
-    ['depois das 22:00', h(22, 5), 15],
+    ['depois das 21:15', h(21, 20), 15],
     ['fora do passo de 5 minutos', h(20, 7), 15],
     ['duração menor que 15', h(20, 0), 10],
     ['duração maior que 30', h(20, 0), 35],
@@ -28,8 +28,8 @@ describe('JanelaDeRetirada (objeto de valor que se valida sozinho)', () => {
   it('oferece exatamente as opções válidas para a UI', () => {
     const inicios = JanelaDeRetirada.iniciosPossiveis()
     expect(inicios[0].toString()).toBe('20:00')
-    expect(inicios[inicios.length - 1].toString()).toBe('22:00')
-    expect(inicios).toHaveLength(25)
+    expect(inicios[inicios.length - 1].toString()).toBe('21:15')
+    expect(inicios).toHaveLength(16)
     expect(JanelaDeRetirada.duracoesPossiveis()).toEqual([15, 20, 25, 30])
     // Toda opção oferecida precisa ser aceita pela própria validação.
     inicios.forEach((inicio) =>
