@@ -21,9 +21,9 @@ o contrário do Aberto/Fechado, e voltaria a ter o `if` por tipo que o enunciado
 
 **Correção:** a forma de pagamento devolve uma `Cobranca`, e a cobrança diz se tem QR
 (`cobranca.codigoQr()`). A UI pergunta pelo **dado**, não pelo **tipo**
-(`src/ui/telas/Reservar.tsx`, `src/dominio/pagamento/Cobranca.ts`). Além disso, as formas
+(`src/apps/aluno/telas/Reservar.tsx`, `src/core/dominio/pagamento/Cobranca.ts`). Além disso, as formas
 são descobertas automaticamente na pasta `dominio/pagamento/formas/`
-(`src/app/formasDePagamento.ts`): para criar uma forma nova basta criar a classe.
+(`src/core/composicao/formasDePagamento.ts`): para criar uma forma nova basta criar a classe.
 
 ## 2. Navegar pelo pedido até a comanda (Demeter), esboço
 
@@ -36,7 +36,7 @@ pedido quebraria a UI.
 
 **Correção:** o `Pedido` não expõe `cobranca`, `item` nem `janela`. Ele oferece
 `numeroDaComanda()`, `estaPago()`, `resumoDoPagamento()`, `nomeDoItem()` e
-`descricaoDaJanela()`, que delegam internamente (`src/dominio/pedido/Pedido.ts`).
+`descricaoDaJanela()`, que delegam internamente (`src/core/dominio/pedido/Pedido.ts`).
 O custo, reconhecido no livro, é ter vários métodos "repassadores" no `Pedido`.
 
 ## 3. Construtor com efeito colateral escondido na `CozinhaSimulada`, código
@@ -49,7 +49,7 @@ comportamento.
 não entende o que acontece, e testar exige truques.
 
 **Correção:** o construtor só guarda as dependências. A assinatura acontece em `ligar()`, que
-devolve a função para desligar (`src/infra/CozinhaSimulada.ts`).
+devolve a função para desligar. (Mais tarde, com o app da cantina de verdade, a "tia robô" foi removida: quem marca o pedido agora é a tela da cantina.)
 
 ## 4. Estimativa calibrada de forma irreal, código (regra de negócio, não princípio)
 
@@ -72,15 +72,94 @@ padrão dos componentes e na fila simulada. O `EstimadorPorComposicao` e o
 
 ---
 
+# Etapa 2: app da cantina e sincronização
+
+## 6. Pedido mutável compartilhado por referência (Liskov e Inversão de Dependências), código
+
+**O que existia:** na primeira versão, a UI do aluno guardava o *objeto* `Pedido`, e a
+"cozinha" em memória alterava esse mesmo objeto. O `ServicoDeRetirada` mudava o pedido
+(`avisarQueEstaIndo`) e **não salvava** nada, porque "todo mundo já tinha a referência".
+
+**Por que fere os princípios:** isso só funciona porque tudo está na mesma memória. Ao trocar o
+armazenamento por um que atravessa abas (BroadcastChannel), não existe referência compartilhada:
+o comportamento mudaria. A implementação em memória "funcionaria por acaso", e a outra não
+seria um substituto válido, o que fere Liskov. As telas também dependiam, sem dizer, de um
+detalhe da implementação, o que fere a Inversão de Dependências.
+
+**Correção:**
+- o estado compartilhado passou a ser **serializável** (`EstadoDaCantina`);
+- o `Pedido` ganhou `paraDados()` e `Pedido.restaurar()`;
+- o repositório devolve sempre uma cópia nova;
+- quem altera um pedido chama `salvar` explicitamente;
+- o app guarda só o **número** da comanda e relê o pedido a cada mudança.
+
+O mesmo teste de integração (`src/core/composicao/integracao.test.ts`) roda com as duas
+implementações para provar a substituição.
+
+## 7. Componente compartilhado importando o contexto de um app, código
+
+**O que aconteceu:** ao mover o `PainelDeDebug` para `src/design/` (componentes compartilhados),
+ele continuou importando `useApp` do **app do aluno**.
+
+**Por que é um problema:** o "compartilhado" ficaria acoplado a um app, e a cantina não poderia
+usá-lo sem puxar o aluno junto. Isso fere a separação pedida e a Inversão de Dependências.
+
+**Correção:** o componente recebe `controleDeRelogio` e `agora` por props. Um teste de arquitetura
+(`src/arquitetura.test.ts`) agora falha se `src/design/` importar algo de `src/apps/`, ou se um
+app importar o outro. Conferi forçando uma violação de propósito: o teste acusou o arquivo e o
+import exatos.
+
+## 8. Tema e modo escuro presos ao documento inteiro, código
+
+**O que existia:** os tokens de cor ficavam em `:root`, e o modo escuro era ligado em
+`<html data-theme>`.
+
+**Problema:** com os dois apps na mesma página (/demo), não daria para ter o aluno vermelho (ou
+escuro) e a cantina café ao mesmo tempo. O componente dependia de um estado global, em vez de
+receber o tema de quem o usa.
+
+**Correção:** os tokens passaram a valer por app (`.tema-aluno`, `.tema-cantina`,
+`[data-modo='escuro']`). Também foram criados tokens **semânticos** (`--primaria`, `--destaque`).
+Considerei redefinir `--vermelho` como marrom na cantina e descartei a ideia: um nome que mente
+sobre o próprio valor esconde a intenção.
+
+## 9. Relógio do debug por aba, esboço
+
+**Ideia inicial:** manter o `RelogioAjustavel` local de cada app.
+
+**Problema:** com /aluno e /cantina em abas diferentes, simular 20:15 no aluno não mudaria a
+hora da cantina, e o timer de chegada (que compara "agora" com o instante do play) daria valores
+absurdos.
+
+**Correção:** o deslocamento do relógio simulado virou parte do estado compartilhado
+(`RelogioCompartilhado`). O domínio continua recebendo só um `Relogio`.
+
+## 10. Bugs desta etapa, código
+
+- **Ordem do CSS:** o `estilos.css` compartilhado era importado depois do CSS da cantina e
+  sobrescrevia as abas (4 colunas em vez de 2). Corrigido importando a base primeiro no
+  `main.tsx`.
+- No roteiro de teste do navegador, simulei 20:15 para uma janela que terminava às 20:15, e o
+  play não apareceu. O erro era do roteiro, não do app; ajustado para 20:00.
+
+---
+
 ## Concessões conscientes (não são erros, mas vale declarar)
 
 - **`ItemDoCardapio.imagem()`** carrega uma chave de imagem. É uma informação de apresentação
   no domínio, tratada como um identificador opaco (como seria uma URL de foto). O domínio não
   sabe como a imagem é desenhada.
-- **`LocalDoCampus`** tem a lista de locais fixa no domínio, em vez de um repositório. É
-  suficiente para a PoC, mas viraria um repositório se a lista mudasse com frequência.
 - **Descoberta automática das formas de pagamento** usa `import.meta.glob`, um recurso do
-  Vite. Isso fica isolado na camada `app/` (raiz de composição). O domínio continua TypeScript
-  puro, o que é verificado pelo teste `src/dominio/arquitetura.test.ts`.
+  Vite. Isso fica isolado em `src/core/composicao/` (raiz de composição). O domínio continua TypeScript
+  puro, o que é verificado pelos testes `src/core/dominio/arquitetura.test.ts` e `src/arquitetura.test.ts`.
 - **Tela do pedido** escolhe o que mostrar com um mapa por situação (`reservado`,
-  `aluno-a-caminho`...). Com mais estados, valeria o padrão *State* dentro do `Pedido`.
+  `a-caminho`, `entregue`, `cancelado`). Com mais estados, valeria o padrão *State* dentro do `Pedido`.
+- **Sincronização "última escrita vence"** no BroadcastChannel: se duas abas alterarem no mesmo
+  instante, uma das alterações se perde. Também não há transação: uma reserva grava comanda,
+  estoque e pedido em três alterações. Para a PoC basta; um backend real resolveria as duas
+  coisas no servidor, e seria só mais uma implementação de `ArmazemDaCantina`.
+- **`src/core/infra` fica dentro do núcleo compartilhado.** O pedido era "núcleo só de domínio".
+  Interpretei assim: o núcleo não tem nada de interface (React, componentes). Ele guarda o domínio
+  puro (`core/dominio`) e os adaptadores sem UI que os dois apps precisam (`core/infra`,
+  `core/composicao`). Os componentes visuais compartilhados ficam em `src/design/`, e nenhum app
+  importa do outro (verificado por teste).

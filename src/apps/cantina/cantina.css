@@ -1,0 +1,363 @@
+/* =========================================================
+   App da CANTINA — só o que é exclusivo dela.
+   Cores vêm dos tokens de .tema-cantina (design/estilos.css).
+   ========================================================= */
+
+.tema-cantina .marca__escola {
+  font-size: 8px;
+}
+
+/* ---------- saudação ---------- */
+.saudacao {
+  margin-top: 18px;
+}
+.saudacao__titulo {
+  font-family: var(--fonte-marca);
+  font-size: 34px;
+  font-weight: 400;
+  line-height: 1.05;
+  color: var(--primaria);
+}
+.saudacao__resumo {
+  margin-top: 4px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--tinta-suave);
+}
+.saudacao__resumo b {
+  color: var(--destaque);
+}
+
+/* ---------- controles (abrir/fechar) ---------- */
+.controles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 16px;
+}
+.controle {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px;
+  border-radius: 22px;
+  background: var(--superficie);
+  box-shadow: var(--sombra-suave);
+}
+.controle__titulo {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+}
+.controle__estado {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 19px;
+  font-weight: 900;
+}
+.controle__ponto {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--verde);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--verde) 22%, transparent);
+}
+.controle--desligado .controle__ponto {
+  background: var(--destaque);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--destaque) 22%, transparent);
+}
+.controle--desligado {
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--destaque) 55%, transparent);
+}
+.controle__botao {
+  height: 42px;
+  margin-top: 4px;
+  padding: 0 10px;
+  font-size: 13.5px;
+}
+
+/* ---------- abas ---------- */
+.abas {
+  grid-template-columns: 1fr 1fr;
+  margin-top: 18px;
+}
+.abas .segmentado__opcao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 15px;
+}
+.abas__contador,
+.secao-titulo__contador {
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--destaque);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 900;
+}
+.secao-titulo__contador {
+  background: var(--creme-forte);
+  color: var(--tinta);
+  vertical-align: middle;
+}
+.dica-cantina {
+  margin: 14px 4px 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--tinta-suave);
+}
+
+/* ---------- pedidos ---------- */
+.lista-pedidos,
+.lista-estoque {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.pedido-card {
+  display: flex;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 22px;
+  background: var(--superficie);
+  box-shadow: var(--sombra-suave);
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  animation: entrar-tela 0.3s ease-out;
+  transition: transform 0.12s ease;
+}
+.pedido-card:active {
+  transform: scale(0.985);
+}
+.pedido-card--a-caminho {
+  box-shadow:
+    inset 0 0 0 2px var(--destaque),
+    var(--sombra-suave);
+}
+.pedido-card--entregue,
+.pedido-card--cancelado {
+  cursor: default;
+  opacity: 0.72;
+}
+.pedido-card--cancelado .pedido-card__foto {
+  filter: grayscale(1);
+}
+.pedido-card__foto {
+  position: relative;
+  flex-shrink: 0;
+  width: 96px;
+  height: 96px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--creme-forte);
+}
+.pedido-card__foto .foto-item,
+.pedido-card__foto > svg {
+  width: 100%;
+  height: 100%;
+}
+.pedido-card__info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.pedido-card__topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.pedido-card__comanda {
+  font-family: var(--fonte-marca);
+  font-size: 30px;
+  line-height: 1;
+  color: var(--primaria);
+  letter-spacing: 0.03em;
+}
+.pedido-card__item {
+  font-size: 15px;
+  font-weight: 900;
+}
+.pedido-card__linha {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--tinta-suave);
+}
+.pedido-card__linha svg {
+  flex-shrink: 0;
+}
+.pedido-card__rodape {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 4px;
+  font-size: 14px;
+}
+.chip-situacao {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: var(--creme-forte);
+  color: var(--tinta);
+}
+.chip-situacao--a-caminho {
+  background: var(--destaque);
+  color: #fff;
+}
+.chip-situacao--entregue {
+  background: var(--pago-fundo);
+  color: var(--pago-texto);
+}
+.chip-situacao--cancelado {
+  background: var(--aviso-fundo);
+  color: var(--aviso-texto);
+}
+.pagamento {
+  padding: 3px 8px;
+  border-radius: 8px;
+  font-size: 11.5px;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pagamento--pago {
+  background: var(--pago-fundo);
+  color: var(--pago-texto);
+}
+.pagamento--pendente {
+  background: var(--pendente-fundo);
+  color: var(--pendente-texto);
+}
+
+/* timer sobre a foto: verde → vermelho (a cor vem do componente) */
+.timer-chegada {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
+  transition: background-color 1s linear;
+}
+.timer-chegada__valor {
+  font-family: var(--fonte-marca);
+  font-size: 26px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.timer-chegada__rotulo {
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.timer-chegada--chegou .timer-chegada__valor {
+  font-size: 18px;
+  animation: piscar 1s ease-in-out infinite;
+}
+@keyframes piscar {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+/* ---------- estoque ---------- */
+.lista-estoque {
+  margin-top: 12px;
+  gap: 8px;
+}
+.estoque-linha {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px 8px 8px;
+  border-radius: 18px;
+  background: var(--superficie);
+  box-shadow: var(--sombra-suave);
+}
+.estoque-linha__foto {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--creme-forte);
+}
+.estoque-linha__foto .foto-item,
+.estoque-linha__foto > svg {
+  width: 100%;
+  height: 100%;
+}
+.estoque-linha__texto {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.estoque-linha__texto strong {
+  font-size: 14.5px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.estoque-linha__texto small {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--tinta-suave);
+}
+.estoque-linha__controle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.estoque-linha__controle .botao-redondo {
+  width: 36px;
+  height: 36px;
+}
+.estoque-linha__qtd {
+  min-width: 26px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 900;
+  font-variant-numeric: tabular-nums;
+}
+.estoque-linha--esgotado .estoque-linha__foto {
+  filter: grayscale(1);
+  opacity: 0.6;
+}
+.estoque-linha--esgotado .estoque-linha__texto small {
+  color: var(--destaque);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.estoque-linha--esgotado .estoque-linha__qtd {
+  color: var(--destaque);
+}
