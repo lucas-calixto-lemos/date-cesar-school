@@ -9,6 +9,9 @@
 PoC da disciplina de Fundamentos de Desenvolvimento de Software · CESAR School
 Princípios de projeto do cap. 5 de *Engenharia de Software Moderna* (Marco Tulio Valente)
 
+**Equipe:** Lucas Calixto · João Souza · Jullya Medeiros · Marcos Amaral · Leandro Carvalho · Yasmin Lopes · Miguel Cabral
+<sub>Projeto idealizado pela equipe inteira.</sub>
+
 <br />
 
 <img src="docs/imagens/aluno-home.jpg" width="190" alt="Cardápio do aluno" />&nbsp;
