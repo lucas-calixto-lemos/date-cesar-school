@@ -9,7 +9,7 @@ export function estadoInicial(): EstadoDaCantina {
     reservasAbertas: true,
     estoque: { ...ESTOQUE_INICIAL },
     pedidos: [],
-    // Comandas de outros alunos já saíram hoje: a primeira da demo é 019.
+    // Comandas de outros alunos já saíram hoje: a primeira do teste é 019.
     ultimaComanda: 18,
     deslocamentoDoRelogioMs: 0,
   }

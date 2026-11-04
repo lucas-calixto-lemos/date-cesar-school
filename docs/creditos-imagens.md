@@ -26,8 +26,8 @@ a foto, o app volta a mostrar a ilustração.
 | `monster.jpg` | DYVER | CC BY-SA 4.0 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Monster_Energy_Mega_can.jpg) |
 | `coca-cola.jpg` | M0tty | CC BY-SA 3.0 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Coca-cola_50cl_can_-_Italia.jpg) |
 | `guarana.jpg` | Cabeza2000 | CC BY-SA 4.0 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Lata_de_Guaran%C3%A1_Antarctica.jpg) |
-| `agua.jpg` | Ahmer Jamil Khan | CC BY-SA 4.0 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Zamzam_water_in_plastic_bottle.jpg) |
-| `agua-com-gas.jpg` | User:Ohmyerica | CC BY-SA 3.0 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Sparkling_Ice_Lemonade_Flavored_Water.jpg) |
+| `agua.jpg` | Trocada pela equipe | Origem a confirmar | Placeholder provisório (substituir pela foto da cantina) |
+| `agua-com-gas.jpg` | Trocada pela equipe | Origem a confirmar | Placeholder provisório (substituir pela foto da cantina) |
 | `gatorade.jpg` | Fotonovela | CC BY-SA 3.0 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Gatorade_Thirst_Quencher.jpg) |
 | `bolo-de-pote.jpg` | Marek Ślusarczyk (Tupungato) Photo portfolio | CC BY 3.0 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:001_Portuguese_cuisine_-_Brigadeiro_chocolate_cake_in_Portugal.jpg) |
 | `red-bull.jpg` | メイド理世 | CC BY-SA 4.0 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Red_Bull_Energy_Drink,_Dongguan,_China_1_May_2024.jpg) |

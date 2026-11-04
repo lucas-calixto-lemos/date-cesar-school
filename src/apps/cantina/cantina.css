@@ -63,11 +63,9 @@
   height: 10px;
   border-radius: 50%;
   background: var(--verde);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--verde) 22%, transparent);
 }
 .controle--desligado .controle__ponto {
   background: var(--destaque);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--destaque) 22%, transparent);
 }
 .controle--desligado {
   box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--destaque) 55%, transparent);

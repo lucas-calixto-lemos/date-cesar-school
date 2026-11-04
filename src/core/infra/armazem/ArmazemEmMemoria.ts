@@ -3,7 +3,8 @@ import { estadoInicial } from './estadoInicial'
 
 /**
  * Implementação 1: estado num objeto em memória.
- * Usada no /demo, onde os dois apps rodam na MESMA página e recebem a mesma instância.
+ * Usada nos testes: os dois apps recebem a mesma instância. A troca por ela (ou pela
+ * de BroadcastChannel) não muda nenhuma tela — é o que o teste de integração prova.
  */
 export class ArmazemEmMemoria implements ArmazemDaCantina {
   private estado: EstadoDaCantina

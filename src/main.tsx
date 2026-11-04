@@ -9,18 +9,17 @@ import {
 } from './core/composicao/composicao'
 import { AppDaCantina } from './apps/cantina/AppDaCantina'
 import { AppDoAluno } from './apps/aluno/AppDoAluno'
-import { Demo } from './apps/demo/Demo'
-import { Inicio } from './apps/demo/Inicio'
+import { Inicio } from './apps/inicio/Inicio'
 
 /*
  * Rotas:
- *   /aluno   → app do aluno, sincronizado com outras abas (BroadcastChannel)
- *   /cantina → app da cantina, sincronizado com outras abas (BroadcastChannel)
- *   /demo    → os dois lado a lado, compartilhando o estado em memória
+ *   /aluno   → app do aluno
+ *   /cantina → app da cantina
  *   /        → página inicial com os links
+ * Abertos em abas do mesmo navegador, aluno e cantina se sincronizam (BroadcastChannel).
  *
- * PRINCÍPIO: Inversão de Dependências — é aqui (e no Demo) que se escolhe a
- * implementação do armazém. Os apps só recebem seus serviços prontos.
+ * PRINCÍPIO: Inversão de Dependências — é aqui que se escolhe a implementação do
+ * armazém. Os apps só recebem seus serviços prontos.
  */
 const ROTAS: Record<string, { titulo: string; tela: () => ReactNode }> = {
   '/aluno': {
@@ -31,7 +30,6 @@ const ROTAS: Record<string, { titulo: string; tela: () => ReactNode }> = {
     titulo: 'Datê · Cantina',
     tela: () => <AppDaCantina servicos={montarServicosDaCantina(criarArmazemEntreAbas())} />,
   },
-  '/demo': { titulo: 'Datê · Demo', tela: () => <Demo /> },
   '/': { titulo: 'Datê · CESAR School', tela: () => <Inicio /> },
 }
 

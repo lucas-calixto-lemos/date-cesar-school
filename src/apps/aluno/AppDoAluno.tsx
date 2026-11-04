@@ -39,7 +39,7 @@ const gravarComanda = (n: number) => {
 
 /**
  * App do ALUNO. Recebe os serviços prontos (injetados) — não sabe se o estado
- * vem da memória (/demo) ou de outras abas (/aluno).
+ * vem da memória (testes) ou de outras abas (/aluno + /cantina).
  */
 // PRINCÍPIO: Inversão de Dependências — a raiz do app depende de ServicosDoAluno
 // (abstração montada fora dele), não de implementações concretas.
@@ -112,8 +112,19 @@ export function AppDoAluno({ servicos }: { servicos: ServicosDoAluno }) {
       case 'estimar':
         return <Estimar itemId={rota.itemId} aoVoltar={voltar} />
       case 'pedido':
-        return pedidoAtual ? <TelaDoPedido pedido={pedidoAtual} aoVoltar={voltar} /> : null
+        // Sem pedido (ex.: alguém resetou o teste): volta ao cardápio em vez de tela vazia.
+        return pedidoAtual ? <TelaDoPedido pedido={pedidoAtual} aoVoltar={voltar} /> : renderizarHome()
     }
+  }
+
+  function renderizarHome() {
+    return (
+      <Home
+        pedidoAtual={pedidoAtual}
+        aoAbrirItem={(itemId) => setPilha([{ tela: 'home' }, { tela: 'detalhe', itemId }])}
+        aoAbrirPedido={() => ir({ tela: 'pedido' })}
+      />
+    )
   }
 
   return (
@@ -122,7 +133,9 @@ export function AppDoAluno({ servicos }: { servicos: ServicosDoAluno }) {
         <div className="aparelho__rolagem" ref={rolagem}>
           {mostrarSplash ? <Splash aoTerminar={terminarSplash} /> : renderizarTela()}
         </div>
-        {!mostrarSplash && <PainelDeDebug controleDeRelogio={servicos.controleDeRelogio} agora={agora} />}
+        {!mostrarSplash && (
+          <PainelDeDebug controleDeRelogio={servicos.controleDeRelogio} agora={agora} aoResetar={servicos.reiniciarTeste} />
+        )}
       </div>
     </Contexto.Provider>
   )

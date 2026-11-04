@@ -9,7 +9,7 @@ import { PainelDaCantina } from './telas/PainelDaCantina'
 
 /**
  * App da CANTINA (tela da tia). Mesmos componentes visuais do aluno, outro tema.
- * Recebe os serviços prontos: não sabe se o estado vem da memória (/demo) ou de
+ * Recebe os serviços prontos: não sabe se o estado vem da memória (testes) ou de
  * outras abas (/cantina).
  */
 // PRINCÍPIO: Inversão de Dependências — depende de ServicosDaCantina (abstração).
@@ -31,7 +31,9 @@ export function AppDaCantina({ servicos }: { servicos: ServicosDaCantina }) {
             <PainelDaCantina />
           )}
         </div>
-        {!mostrarSplash && <PainelDeDebug controleDeRelogio={servicos.controleDeRelogio} agora={agora} />}
+        {!mostrarSplash && (
+          <PainelDeDebug controleDeRelogio={servicos.controleDeRelogio} agora={agora} aoResetar={servicos.reiniciarTeste} />
+        )}
       </div>
     </Contexto.Provider>
   )

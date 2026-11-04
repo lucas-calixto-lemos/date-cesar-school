@@ -12,7 +12,7 @@ import { ErroDeDominio } from '../../dominio/compartilhado/ErroDeDominio'
 import type { HoraDoDia } from '../../dominio/compartilhado/HoraDoDia'
 import { Pedido } from '../../dominio/pedido/Pedido'
 import type { RepositorioDePedidos } from '../../dominio/pedido/RepositorioDePedidos'
-import type { ArmazemDaCantina } from '../../dominio/sincronizacao/ArmazemDaCantina'
+import type { ArmazemDaCantina, EstadoDaCantina } from '../../dominio/sincronizacao/ArmazemDaCantina'
 import type { ControleDeRelogio, Relogio } from '../../dominio/tempo/Relogio'
 
 export class RepositorioDePedidosNoArmazem implements RepositorioDePedidos {
@@ -121,6 +121,25 @@ export class CardapioComEstoque implements CardapioRepository {
 
   private montar(dados: ItemSerializado): ItemDoCardapio {
     return ItemDoCardapio.restaurar(dados, this.estoque.quantidadeDe(dados.id) > 0)
+  }
+}
+
+/**
+ * "Resetar teste": volta o estado compartilhado ao início do dia (sem pedidos,
+ * estoque cheio, comandas a partir de 019, cantina e reservas abertas, relógio real).
+ *
+ * É uma alteração como outra qualquer — a versão SOBE em vez de voltar a 0 —,
+ * então as outras abas aceitam a mudança pelo mesmo mecanismo de sincronização.
+ */
+export class ReinicioDoTeste {
+  constructor(
+    private readonly armazem: ArmazemDaCantina,
+    private readonly inicial: () => EstadoDaCantina,
+  ) {}
+
+  reiniciar(): void {
+    const { versao: _ignorada, ...estado } = this.inicial()
+    this.armazem.alterar(() => estado)
   }
 }
 

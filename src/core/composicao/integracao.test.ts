@@ -20,7 +20,7 @@ interface Cenario {
 let n = 0
 const CENARIOS: Array<[string, () => Cenario]> = [
   [
-    'em memória (o mesmo armazém para os dois apps, como no /demo)',
+    'em memória (o mesmo armazém para os dois apps)',
     () => {
       const armazem = new ArmazemEmMemoria()
       return { armazemDoAluno: armazem, armazemDaCantina: armazem, sincronizar: async () => {}, fechar: () => {} }
@@ -123,5 +123,43 @@ describe.each(CENARIOS)('Aluno e cantina sincronizados: %s', (_nome, montar) => 
 
     // 8. As comandas não se repetem entre os dois lados.
     expect(outro.numeroDaComanda()).toBe('020')
+  })
+})
+
+describe.each(CENARIOS)('Resetar teste: %s', (_nome, montar) => {
+  it('o reset feito em um app apaga tudo nos dois, e as comandas recomeçam em 019', async () => {
+    const c = montar()
+    fechar = c.fechar
+    const base = RelogioFixo.as(14, 0)
+    const aluno = montarServicosDoAluno(c.armazemDoAluno, base)
+    const cantina = montarServicosDaCantina(c.armazemDaCantina, base)
+    const janela = JanelaDeRetirada.criar(HoraDoDia.de(20, 0), 15)
+    const naRetirada = aluno.formasDePagamento.buscar('na-retirada')
+
+    // Bagunça o estado: reserva, fecha a cantina, mexe no estoque e no relógio.
+    aluno.reserva.reservar({ itemId: 'coxinha', quantidade: 3, janela, formaDePagamento: naRetirada })
+    await c.sincronizar()
+    cantina.operacao.fecharCantina()
+    cantina.estoque.aumentar('brownie')
+    aluno.controleDeRelogio.ajustarPara(HoraDoDia.de(20, 30))
+    await c.sincronizar()
+    expect(cantina.atendimento.listarPedidos()).toHaveLength(1)
+
+    // A CANTINA reseta (poderia ser o aluno: é a mesma operação nos dois apps).
+    cantina.reiniciarTeste()
+    await c.sincronizar()
+
+    // ...e o ALUNO vê tudo zerado.
+    expect(cantina.atendimento.listarPedidos()).toHaveLength(0)
+    expect(aluno.bloqueioDeReserva.motivoDoBloqueio()).toBeNull()
+    expect(aluno.controleDeRelogio.estaAjustado()).toBe(false)
+    expect(HoraDoDia.deData(aluno.relogio.agora()).toString()).toBe('14:00')
+    const qtd = (id: string) => cantina.estoque.listar().find((l) => l.item.id() === id)!.quantidade
+    expect(qtd('coxinha')).toBe(12)
+    expect(qtd('brownie')).toBe(12)
+    expect(aluno.cardapio.buscar('bolo-de-pote').estaEsgotado()).toBe(true)
+
+    const nova = aluno.reserva.reservar({ itemId: 'pastel', quantidade: 1, janela, formaDePagamento: naRetirada })
+    expect(nova.numeroDaComanda()).toBe('019')
   })
 })

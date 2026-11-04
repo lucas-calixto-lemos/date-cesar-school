@@ -40,12 +40,12 @@ function proibir(pasta: string, proibido: RegExp) {
 // PRINCÍPIO: apps realmente separados — as regras abaixo transformam a
 // arquitetura em algo verificável. Quebrou a regra, quebrou o teste.
 describe('Arquitetura do projeto', () => {
-  it('o app do ALUNO não importa nada do app da cantina nem da demo', () => {
-    proibir('./apps/aluno/', /^\.\/apps\/(cantina|demo)\//)
+  it('o app do ALUNO não importa nada do app da cantina nem da página inicial', () => {
+    proibir('./apps/aluno/', /^\.\/apps\/(cantina|inicio)\//)
   })
 
-  it('o app da CANTINA não importa nada do app do aluno nem da demo', () => {
-    proibir('./apps/cantina/', /^\.\/apps\/(aluno|demo)\//)
+  it('o app da CANTINA não importa nada do app do aluno nem da página inicial', () => {
+    proibir('./apps/cantina/', /^\.\/apps\/(aluno|inicio)\//)
   })
 
   it('o núcleo (src/core) não conhece apps, design nem React', () => {

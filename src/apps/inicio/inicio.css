@@ -1,0 +1,76 @@
+/* Página inicial (/): aponta para os dois apps. */
+.inicio {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  text-align: center;
+  color: #f4efe9;
+}
+.inicio__mascote {
+  width: 110px;
+  height: auto;
+}
+.inicio__nome {
+  margin-top: 10px;
+  font-family: var(--fonte-marca);
+  font-size: 54px;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--vermelho);
+}
+.inicio__escola {
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #a8a5a1;
+}
+.inicio__lista {
+  display: grid;
+  gap: 12px;
+  width: min(420px, 100%);
+  margin-top: 28px;
+}
+.inicio__destino {
+  display: grid;
+  gap: 2px;
+  padding: 16px 18px;
+  border-radius: 20px;
+  background: #1e1e22;
+  color: #f4efe9;
+  text-align: left;
+  text-decoration: none;
+  box-shadow: inset 0 0 0 1px #34343a;
+  transition: box-shadow 0.15s;
+}
+.inicio__destino:hover,
+.inicio__destino:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--vermelho);
+}
+.inicio__destino strong {
+  font-size: 17px;
+  font-weight: 900;
+}
+.inicio__destino small {
+  color: #a8a5a1;
+  font-size: 13.5px;
+}
+.inicio__destino code {
+  margin-top: 4px;
+  color: #ffb13b;
+  font-weight: 700;
+}
+.inicio__dica {
+  max-width: 420px;
+  margin-top: 18px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: #a8a5a1;
+}
+.inicio__dica b {
+  color: #ffb39e;
+}

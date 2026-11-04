@@ -1,10 +1,9 @@
 import { mascoteCreme } from '../../design/componentes/Marca'
-import './demo.css'
+import './inicio.css'
 
 const DESTINOS = [
-  { href: '/demo', titulo: 'Demo lado a lado', texto: 'Aluno e cantina juntos, sincronizados em memória.' },
-  { href: '/aluno', titulo: 'App do aluno', texto: 'Abra numa aba. Sincroniza com /cantina por BroadcastChannel.' },
-  { href: '/cantina', titulo: 'App da cantina', texto: 'Abra noutra aba. Sincroniza com /aluno por BroadcastChannel.' },
+  { href: '/aluno', titulo: 'App do aluno', texto: 'Abra numa aba. Tudo o que fizer aparece na cantina.' },
+  { href: '/cantina', titulo: 'App da cantina', texto: 'Abra noutra aba. Sincroniza com o aluno em tempo real.' },
 ]
 
 /** Página inicial ("/"): só aponta para os apps. */
@@ -23,6 +22,10 @@ export function Inicio() {
           </a>
         ))}
       </nav>
+      <p className="inicio__dica">
+        Abra os dois em abas do mesmo navegador. Para recomeçar um teste, use <b>Resetar teste</b> na abinha
+        lateral de qualquer um dos apps.
+      </p>
     </main>
   )
 }

@@ -29,11 +29,12 @@ import {
   EstoqueNoArmazem,
   GeradorDeComandaNoArmazem,
   OperacaoNoArmazem,
+  ReinicioDoTeste,
   RelogioCompartilhado,
   RepositorioDePedidosNoArmazem,
 } from '../infra/armazem/adaptadores'
 import { ArmazemBroadcastChannel } from '../infra/armazem/ArmazemBroadcastChannel'
-import { ArmazemEmMemoria } from '../infra/armazem/ArmazemEmMemoria'
+import { estadoInicial } from '../infra/armazem/estadoInicial'
 import { MapaDoCampusEmMemoria } from '../infra/dadosDoCampus'
 import { CATALOGO } from '../infra/dadosDoCardapio'
 import { FilaSimulada } from '../infra/FilaSimulada'
@@ -46,6 +47,8 @@ interface ServicosBase {
   controleDeRelogio: ControleDeRelogio
   /** Observer: chamado sempre que o estado compartilhado muda (aqui ou no outro app). */
   aoMudar(ouvinte: () => void): () => void
+  /** Só para o painel de debug: apaga tudo o que foi feito no teste, nos dois apps. */
+  reiniciarTeste(): void
 }
 
 // PRINCÍPIO: Segregação de Interfaces — o app do ALUNO só enxerga operações de
@@ -76,12 +79,13 @@ export interface ServicosDaCantina extends ServicosBase {
  * Raiz de composição: o ÚNICO lugar que conhece as classes concretas.
  *
  * PRINCÍPIO: Inversão de Dependências — os dois "montar" recebem o ArmazemDaCantina
- * (abstração) por parâmetro. Quem chama decide: memória no /demo, BroadcastChannel
- * em /aluno e /cantina. Nenhuma tela muda com a troca (Aberto/Fechado + Liskov).
+ * (abstração) por parâmetro. Quem chama decide: BroadcastChannel em /aluno e /cantina,
+ * memória nos testes. Nenhuma tela muda com a troca (Aberto/Fechado + Liskov).
  */
 function montarBase(armazem: ArmazemDaCantina, relogioBase: Relogio) {
   const relogio = new RelogioCompartilhado(relogioBase, armazem)
   const estoque = new EstoqueNoArmazem(armazem)
+  const reinicio = new ReinicioDoTeste(armazem, estadoInicial)
   return {
     relogio,
     estoque,
@@ -92,6 +96,7 @@ function montarBase(armazem: ArmazemDaCantina, relogioBase: Relogio) {
       relogio,
       controleDeRelogio: relogio,
       aoMudar: (ouvinte: () => void) => armazem.assinar(() => ouvinte()),
+      reiniciarTeste: () => reinicio.reiniciar(),
     } satisfies ServicosBase,
   }
 }
@@ -145,14 +150,11 @@ export function montarServicosDaCantina(
   }
 }
 
-// ---- as duas implementações do armazém ----
-
-/** Implementação 1: um objeto em memória, para entregar aos dois apps na mesma página (/demo). */
-export function criarArmazemEmMemoria(): ArmazemDaCantina {
-  return new ArmazemEmMemoria()
-}
-
-/** Implementação 2: sincroniza abas diferentes do navegador (/aluno e /cantina). */
+/**
+ * Armazém usado pelos apps: sincroniza abas diferentes do navegador (/aluno e /cantina).
+ * A outra implementação, ArmazemEmMemoria, é usada nos testes — e a troca entre as
+ * duas não muda nenhuma tela (ver integracao.test.ts).
+ */
 export function criarArmazemEntreAbas(): ArmazemDaCantina {
   return new ArmazemBroadcastChannel()
 }
