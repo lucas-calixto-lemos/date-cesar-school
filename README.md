@@ -30,6 +30,29 @@ São dois apps que funcionam juntos:
 
 É uma prova de conceito: sem backend nem banco de dados. Os dois apps sincronizam entre abas do mesmo navegador.
 
+## Antes do código: o board
+
+Antes de escrever a primeira linha, desenhamos os dois fluxos num board: **estudante** e **cantina**, tela por tela, com as regras de cada passo e as referências visuais. Ele foi o nosso "contrato" com o produto. Cada nota virou uma tela ou uma regra do domínio:
+
+<div align="center">
+<a href="docs/board/board-fluxo-date.pdf"><img src="docs/board/board-fluxo-date.jpg" width="760" alt="Board com o fluxo do estudante e o fluxo da cantina" /></a>
+<br />
+<sub>Clique para abrir o <a href="docs/board/board-fluxo-date.pdf">PDF do board</a> em alta resolução.</sub>
+</div>
+
+| Nota do board | Onde virou código |
+|---|---|
+| Botão de reservar com cronômetro até as 19h | [`HorarioLimiteDeReserva`](src/core/dominio/reserva/HorarioLimiteDeReserva.ts) com `Relogio` injetável |
+| Busca e lista em ordem alfabética; esgotado em preto e branco | [`ConsultaDeCardapio`](src/core/dominio/cardapio/ConsultaDeCardapio.ts) |
+| Escolher o intervalo e a forma de pagamento | [`JanelaDeRetirada`](src/core/dominio/reserva/JanelaDeRetirada.ts) + [`pagamento/formas/`](src/core/dominio/pagamento/formas) |
+| Comanda (ex.: 019) | [`GeradorDeComanda`](src/core/dominio/comanda/GeradorDeComanda.ts) |
+| Play "estou indo buscar", saindo de uma sala | [`ServicoDeRetirada`](src/core/dominio/cantina/ServicoDeRetirada.ts) + [`MapaDoCampus`](src/core/dominio/campus/MapaDoCampus.ts) |
+| Estimar em 5 níveis, de "não dá" até "vai dar" | [`EstimadorPorComposicao`](src/core/dominio/estimativa/EstimadorPorComposicao.ts) + [`ClassificadorDeChance`](src/core/dominio/estimativa/ClassificadorDeChance.ts) |
+| Cantina: fechar/reabrir e finalizar reservas, com confirmação | [`RegraDeReserva`](src/core/dominio/reserva/RegraDeReserva.ts) + [`PainelDaCantina`](src/apps/cantina/telas/PainelDaCantina.tsx) |
+| Timer sobre a foto, do verde ao vermelho | o **mesmo** estimador do aluno, em [`ServicoDeAtendimento`](src/core/dominio/cantina/ServicoDeAtendimento.ts) |
+| Duplo clique → "Pedido entregue" ou "Cancelar" | [`ListaDePedidos`](src/apps/cantina/componentes/ListaDePedidos.tsx) |
+| Quantidade de cada item | [`ControleDeEstoque`](src/core/dominio/cantina/ControleDeEstoque.ts) |
+
 ## Como rodar
 
 Requer **Node 18+**.
